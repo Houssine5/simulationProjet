@@ -71,8 +71,10 @@ $( "#form-graph" ).submit(function( event ) {
                     var ctx = document.getElementById('PeriodicsGraphe').getContext('2d');
                 chart = new Chart(ctx, {
                 type:"line",
-                data: {
-                    labels: ["houss"],
+                data: {   
+
+                    labels: ['test', "houss"],
+ 
                     datasets:[]
                 },
                 options: {
