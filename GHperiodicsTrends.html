@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Tendances Périodiques  </title>
+    <link rel="stylesheet" href="Periodicstrends.css">
+</head>
+<body>
+<header>
+    <h4 id="title"> Tendances Périodiques </h4>
+    <nav>
+        <ul class="elem_toolbar">
+            <!-- <li><a href="#">services</a></li> -->
+            <li><a href="#"><img class="logo" src="SettingsIcon.png" alt="logo"></a></li>
+            <li><a href="#"><img class="logo" src="NotifWhite.png" alt="logo"></a></li>
+        </ul>
+    </nav>
+
+    <a class="btn" href="Login.html"><button>Deconnexion</button></a>
+</header>
+<main>
+    <div id="DivGraphe">
+
+        <canvas id="PeriodicsGraphe"></canvas>
+    </div>
+    <form id="form-graph">
+        <select name="energy" id="Nrj">
+            <option value="" disabled selected hidden>Energie</option>
+            <option  value="eau">eau</option>
+            <option value="gaz">gaz</option>
+            <option value="elec">electricite</option>
+        </select>
+        <input name="année" id="Year"type="number"  min="2022" max="2950" placeholder="Année"/>
+        <button type="submit" id="val" > valider </button>
+    </form>
+    <form id="form-comp">
+        <input name="Compareannee" id="YearC"type="number"  min="2022" max="2950" placeholder="Année à comparer"/>
+        <button type="submit" id="btnComparer" > Comparer </button>
+    </form>
+
+
+    <form action="/TimeTrends" method="get"><button id="retour" > retour </button></form>
+</main>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    var chart = null;
+    // Using validation to check for the presence of an input
+
+$( "#form-graph" ).submit(function( event ) {
+    event.preventDefault();
+    $.ajax({
+
+        url: "/periodics",
+        data: {
+            "energy": $( "#Nrj option:selected" ).text(),
+            "année": $("#form-graph").find('input[name="année"]').val(),
+
+        },
+        success: function(result) {
+            resultData = result;
+            // Traitement des données récupérées ici
+            if (chart == null){
+                    var ctx = document.getElementById('PeriodicsGraphe').getContext('2d');
+                chart = new Chart(ctx, {
+                type:"line",
+                data: {}, 
+                options: {
+                    scales:{ y: {beginAtZero: true}  }
+                    }
+                });
+            }
+            chart.data = {
+                labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+                datasets: [{
+                    label: 'Consommation',
+                    data: result,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            }
+        }
+    });
+
+});
+
+
+
+    // Using validation to check for the presence of an input
+
+    $( "#form-comp" ).submit(function( event ) {
+    event.preventDefault();
+    $.ajax({
+
+        url: "/ComparePeriodics",
+        data: {
+            "energy": $( "#Nrj option:selected" ).text(),
+            "Compareannee": $("#form-comp").find('input[name="Compareannee"]').val(),
+
+        },
+        success: function(result2) {
+        // Traitement des données récupérées ici
+        var ctx = document.getElementById('PeriodicsGraphe').getContext('2d');
+        var chart = new Chart(ctx, {
+        type:"line",
+        data: {
+            labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+            datasets: [{
+                label: 'Consommation',
+                data: resultData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 2
+            },
+
+            {
+                label: 'Consommation2',
+                data: result2,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+                options: {
+                scales:{ y: {beginAtZero: true}  }
+                }
+            });
+        }
+    });
+
+});
+
+
+
+</script>
+
+
+
+</body>
