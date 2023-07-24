@@ -47,7 +47,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
+
 
     var chart = null;
     // Using validation to check for the presence of an input
@@ -69,13 +71,17 @@ $( "#form-graph" ).submit(function( event ) {
                     var ctx = document.getElementById('PeriodicsGraphe').getContext('2d');
                 chart = new Chart(ctx, {
                 type:"line",
-                data: {}, 
+                data: {
+                    labels: [],
+                    datasets:[]
+                },
                 options: {
                     scales:{ y: {beginAtZero: true}  }
                     }
                 });
             }
             chart.data = {
+
                 labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
                 datasets: [{
                     label: 'Consommation',
@@ -111,6 +117,7 @@ $( "#form-graph" ).submit(function( event ) {
                     borderWidth: 2
                 }]
             }
+            chart.update();
         }
     });
 
@@ -173,7 +180,5 @@ $( "#form-graph" ).submit(function( event ) {
 
 
 </script>
-
-
 
 </body>
